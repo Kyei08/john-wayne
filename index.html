@@ -349,18 +349,75 @@
             opacity: 0.7;
         }
 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 3px 0;
+            transition: 0.3s;
+            box-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 15px 20px;
             }
             
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
             .nav-links {
-                gap: 15px;
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 30px;
+                padding-top: 50px;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
             }
             
             .nav-links a {
-                padding: 8px 15px;
-                font-size: 0.9rem;
+                padding: 15px 30px;
+                font-size: 1.2rem;
+                border: 1px solid rgba(255, 68, 68, 0.3);
+                border-radius: 30px;
+                background: rgba(255, 68, 68, 0.1);
+                min-width: 200px;
+                text-align: center;
             }
             
             .hero h1 {
@@ -369,6 +426,22 @@
             
             .content-box {
                 padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links a {
+                font-size: 1.1rem;
+                min-width: 180px;
+                padding: 12px 25px;
             }
         }
     </style>
@@ -384,7 +457,12 @@
     <nav id="navbar">
         <div class="nav-content">
             <div class="logo">JOHN WAYNE</div>
-            <ul class="nav-links">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -458,6 +536,31 @@
     </div>
 
     <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
         // Particle System
         function createParticle() {
             const particle = document.createElement('div');
